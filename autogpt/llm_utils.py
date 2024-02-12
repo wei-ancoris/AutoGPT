@@ -14,9 +14,12 @@ CFG = Config()
 if CFG.llm_provider == 'openai':
     import openai
     openai.api_key = CFG.openai_api_key
-if CFG.llm_provider == 'anthropic':
+elif CFG.llm_provider == 'anthropic':
     import anthropic
     anthropic_client = anthropic.Client(CFG.anthropic_api_key)
+elif CFG.llm_provider == 'vertexai':
+    from .vertexai import Client
+    vertexai_client = Client(CFG.vertexai_api_key)
 
 def call_ai_function(
     function: str, args: list, description: str, model: str | None = None
@@ -100,12 +103,19 @@ def create_chat_completion(
                         temperature=temperature,
                         max_tokens=max_tokens,
                     )
-            if CFG.llm_provider == "anthropic":
+            elif CFG.llm_provider == "anthropic":
                 response = anthropic_client.completion(
                     prompt=f"{anthropic.HUMAN_PROMPT} {messages} {anthropic.AI_PROMPT}",
                     stop_sequences = [anthropic.HUMAN_PROMPT],
                     model="claude-v1",
                     max_tokens_to_sample=1500,
+                )
+            elif CFG.llm_provider == 'vertexai':
+                response = vertexai_client.completion(
+                    model='gemini-pro',
+                    messages=messages,
+                    temperature=temperature,
+                    max_tokens=max_tokens
                 )
             break
         except RateLimitError:
@@ -148,8 +158,11 @@ def create_chat_completion(
 
     if CFG.llm_provider == "openai":
         return response.choices[0].message["content"]
-    if CFG.llm_provider == "anthropic":
+    elif CFG.llm_provider == "anthropic":
         return response['completion']
+    elif CFG.llm_provider == 'vertexai':
+        return response.text
+
 
 
 def create_embedding_with_ada(text) -> list:

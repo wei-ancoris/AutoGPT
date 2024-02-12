@@ -37,6 +37,7 @@ class Config(metaclass=Singleton):
 
         self.openai_api_key = os.getenv("OPENAI_API_KEY")
         self.anthropic_api_key = os.getenv("ANTHROPIC_API_KEY")
+        self.vertextai_api_key = os.getenv("VERTEXAI_API_KEY")
 
         self.temperature = float(os.getenv("TEMPERATURE", "1"))
         self.use_azure = os.getenv("USE_AZURE") == "True"
@@ -238,4 +239,16 @@ def check_openai_api_key() -> None:
             + "Please set your OpenAI API key in .env or as an environment variable."
         )
         print("You can get your key from https://platform.openai.com/account/api-keys")
+        exit(1)
+
+
+def check_vertexai_api_key() -> None:
+    """Check if the Vertex API key is set in config.py or as an environment variable."""
+    cfg = Config()
+    if not cfg.vertexai_api_key:
+        print(
+            Fore.RED
+            + "Please set your VertexAI API key in .env or as an environment variable."
+        )
+        print("You can get your key from https://console.cloud.google.com/vertex-ai")
         exit(1)

@@ -68,7 +68,7 @@ def main(
     from colorama import Fore
 
     from autogpt.agent.agent import Agent
-    from autogpt.config import Config, check_openai_api_key
+    from autogpt.config import Config, check_openai_api_key, check_vertexai_api_key
     from autogpt.configurator import create_config
     from autogpt.logs import logger
     from autogpt.memory import get_memory
@@ -79,6 +79,8 @@ def main(
         # TODO: fill in llm values here
         if cfg.llm_provider == 'openai':
             check_openai_api_key()
+        if cfg.llm_provider == 'vertexai':
+            check_vertexai_api_key()
 
         create_config(
             continuous,
