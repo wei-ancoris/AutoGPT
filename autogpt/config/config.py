@@ -37,7 +37,7 @@ class Config(metaclass=Singleton):
 
         self.openai_api_key = os.getenv("OPENAI_API_KEY")
         self.anthropic_api_key = os.getenv("ANTHROPIC_API_KEY")
-        self.vertextai_api_key = os.getenv("VERTEXAI_API_KEY")
+        self.vertexai_api_key = os.getenv("VERTEXAI_API_KEY")
 
         self.temperature = float(os.getenv("TEMPERATURE", "1"))
         self.use_azure = os.getenv("USE_AZURE") == "True"

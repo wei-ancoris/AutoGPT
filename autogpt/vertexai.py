@@ -19,14 +19,15 @@ class Client:
 
         model = genai.GenerativeModel(model_name=model,
                               generation_config=generation_config,
-                              safety_settings=safety_settings)
+                              safety_settings=self.safety_settings)
+        print(messages)
 
         response = model.generate_content(messages)
 
         return response
 
     @property
-    def safey_settings(self):
+    def safety_settings(self):
         return [
             {
                 "category": "HARM_CATEGORY_HARASSMENT",
